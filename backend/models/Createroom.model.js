@@ -1,8 +1,8 @@
-    import mongoose from 'mongoose';
+    const mongoose = require('mongoose');
 
     const roomSchema = new mongoose.Schema(
     {
-        roomName: {
+        roomId: {
         type: String,
         required: true,
         trim: true,
@@ -32,4 +32,4 @@
     }
     );
 
-    export default mongoose.model('Room', roomSchema);
+    module.exports=mongoose.model('Room', roomSchema);

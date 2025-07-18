@@ -2,10 +2,12 @@
     import { Plus } from "lucide-react";
     import { useNavigate } from "react-router-dom";
     import toast from "react-hot-toast";
+    import {axiosInstance} from "./components/utils/axios.js"; // default import
 
     function JoinRoomModal() {
     const [roomId, setRoomId] = useState("");
     const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleJoinRoom = async (e) => {
@@ -16,26 +18,44 @@
         return;
         }
 
-        // 🔐 Optional: Call backend to verify password before navigating
         try {
-        const res = await fetch(`/api/rooms/verify`, {
-            method: "POST",
-            headers: {
-            "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ roomId: roomId.trim(), password }),
+        setLoading(true);
+
+        const res = await axiosInstance.post("/room/join", {
+            roomId: roomId.trim(),
+            password,
         });
 
-        const data = await res.json();
-        if (!res.ok) {
-            toast.error(data.message || "Failed to join room.");
+        if (!res?.data?.success) {
+            toast.error(res?.data?.message || "Failed to join room.");
             return;
         }
 
         toast.success("Successfully joined the room!");
         navigate(`/room/${roomId.trim()}`);
-        } catch (err) {
-        toast.error("Error verifying room.");
+        } catch (error) {
+        if (error.response) {
+            // Server responded with a status outside 2xx
+            const status = error.response.status;
+            const message = error.response.data?.message;
+
+            if (status === 401 || status === 403) {
+            toast.error(message || "Unauthorized or forbidden access.");
+            } else if (status === 404) {
+            toast.error("Room not found.");
+            } else {
+            toast.error(message || "Server error while joining room.");
+            }
+        } else if (error.request) {
+            // Request was made but no response
+            toast.error("No response from server. Check your internet.");
+        } else {
+            // Something else (like wrong config)
+            toast.error("Unexpected error occurred while joining room.");
+            console.error("Join room error:", error.message);
+        }
+        } finally {
+        setLoading(false);
         }
     };
 
@@ -45,7 +65,6 @@
             <h2 className="text-xl font-semibold mb-4">Join Room</h2>
 
             <form onSubmit={handleJoinRoom}>
-            {/* Room ID */}
             <div className="mb-4">
                 <label htmlFor="roomId" className="block text-sm font-medium text-gray-700 mb-2">
                 Room ID
@@ -61,7 +80,6 @@
                 />
             </div>
 
-            {/* Password */}
             <div className="mb-4">
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
                 Room Password
@@ -76,15 +94,14 @@
                 />
             </div>
 
-            {/* Join button */}
             <button
                 type="submit"
+                disabled={loading}
                 className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200"
             >
-                Join
+                {loading ? "Joining..." : "Join"}
             </button>
 
-            {/* Navigation buttons */}
             <div className="flex gap-4 mt-5">
                 <button
                 type="button"

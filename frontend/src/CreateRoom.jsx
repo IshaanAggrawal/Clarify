@@ -1,7 +1,9 @@
-    import { Plus } from 'lucide-react';
-    import { useNavigate } from 'react-router-dom';
-    import { useDispatch, useSelector } from 'react-redux';
-    import { setdescription, setroomName, setPassword } from './components/store/roomSlice';
+    import { Plus } from "lucide-react";
+    import { useNavigate } from "react-router-dom";
+    import { useDispatch, useSelector } from "react-redux";
+    import { setdescription, setroomName, setPassword } from "./components/store/roomSlice.js";
+    import {axiosInstance} from "./components/utils/axios.js";
+    import toast from "react-hot-toast";
 
     const CreateRoom = () => {
     const { roomName, description, password } = useSelector((store) => store.room);
@@ -11,23 +13,22 @@
     const handleCreate = async (e) => {
         e.preventDefault();
         try {
-        const res = await fetch('/api/rooms', {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ roomName, description, password }),
+        const res = await axiosInstance.post("/room/create", {
+            roomId: roomName.trim(),
+            description: description.trim(),
+            password: password.trim(),
         });
 
-        const data = await res.json();
-        if (res.ok) {
-            console.log('Room created:', data.room);
-            navigate('/rooms');
-        } else {
-            alert(data.message);
+        if (!res.data.success) {
+            toast.error(res.data.message || "Failed to create room.");
+            return;
         }
+
+        toast.success("Room created successfully!");
+        navigate(`/room/${roomName.trim()}`);
         } catch (err) {
-        alert(err.message);
+        const message = err.response?.data?.message || "Error creating room.";
+        toast.error(message);
         }
     };
 
@@ -73,10 +74,10 @@
             <div className="flex gap-4 mt-6">
             <button
                 type="button"
-                onClick={() => navigate('/')}
+                onClick={() => navigate("/join-room")}
                 className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200 h-10"
             >
-                Back Home
+                Join Room
             </button>
 
             <button
@@ -93,4 +94,3 @@
     };
 
     export default CreateRoom;
-    import React from 'react';

@@ -5,6 +5,7 @@ const cookieParser=require('cookie-parser')
 const connectdb = require('./utils/db')
 const http=require('http')
 const authRoutes=require('./routes/user.route')
+const roomRoutes=require('./routes/room.route')
 
 dotenv.config()
 
@@ -22,6 +23,7 @@ app.use(cors({
 }));
 
 app.use("/api/auth", authRoutes);
+app.use("/api/room", roomRoutes);
 
 const PORT = process.env.PORT || 3000;
 
