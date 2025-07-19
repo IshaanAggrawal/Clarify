@@ -15,6 +15,7 @@ import JoinRoomModal from './JoinRoomModal';
 import CreateRoom from './CreateRoom';
 import RoomPage from './components/RoomPage';
 import Rules from './components/Rules';
+import Analytics from './components/Analytics';
 
 function App() {
   const { isCheckingAuth, authUser } = useSelector((store) => store.auth);
@@ -88,6 +89,10 @@ function App() {
         <Route
           path="/create-room"
           element={authUser ? <CreateRoom /> : <Navigate to="/signup" />}
+        />
+        <Route
+          path="/todolist"
+          element={authUser ? <Analytics /> : <Navigate to="/signup" />}
         />
         <Route
           path="/room/:roomId"

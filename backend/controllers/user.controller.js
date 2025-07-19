@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/User.model");
 const generateToken = require("../utils/utils");
 const cloudinary=require('../utils/cloudinary')
+const Todolist = require("../models/Todolist.model");
 
 const register = async (req, res) => {
     try {
@@ -34,6 +35,11 @@ const register = async (req, res) => {
         });
 
         console.log("New user created:", newUser);
+
+        await Todolist.create({
+            createdBy: newUser._id,
+            tasks: [],
+        });
 
         if (newUser) {
             generateToken(newUser._id, res);

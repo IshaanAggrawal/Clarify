@@ -21,7 +21,7 @@ function Navbar() {
         />
         <div className="hidden md:flex items-center gap-4 text-gray-500 text-sm font-medium">
           <button onClick={()=>navigate('/rules')} className="hover:text-black transition text-lg">Rules</button>
-          <button className="hover:text-black transition text-lg">Sites</button>
+          <button onClick={()=>navigate(!authUser?"/":"/todolist")} className="hover:text-black transition text-lg">{authUser ? "Analytics":""}</button>
         </div>
       </div>
 
