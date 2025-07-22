@@ -3,12 +3,15 @@
     import { useNavigate } from "react-router-dom";
     import toast from "react-hot-toast";
     import {axiosInstance} from "./components/utils/axios.js"; // default import
+    import { useDispatch } from "react-redux";
+    import { setisjoinedroom } from "./components/store/roomSlice.js";
 
     function JoinRoomModal() {
     const [roomId, setRoomId] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleJoinRoom = async (e) => {
         e.preventDefault();
@@ -32,6 +35,7 @@
         }
 
         toast.success("Successfully joined the room!");
+        dispatch(setisjoinedroom(true));
         navigate(`/room/${roomId.trim()}`);
         } catch (error) {
         if (error.response) {

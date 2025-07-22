@@ -1,7 +1,7 @@
     import { createSlice } from '@reduxjs/toolkit';
 
     const initialState = {
-    isjoiningroom: false,
+    isjoinedroom: false,
     isCheckingAuth: true,
     onlineUsers: [],
     socket: null,
@@ -21,14 +21,14 @@
         setdescription: (state, action) => {
         state.description = action.payload;
         },
-        setPassword: (state, action) => { // ✅ New reducer
+        setPassword: (state, action) => {
         state.password = action.payload;
         },
         setroomId: (state, action) => {
         state.roomId = action.payload;
         },
-        setisjoiningroom: (state, action) => {
-        state.isjoiningroom = action.payload;
+        setisjoinedroom: (state, action) => {
+        state.isjoinedroom = action.payload;
         },
         setIsCheckingAuth: (state, action) => {
         state.isCheckingAuth = action.payload;
@@ -53,7 +53,7 @@
     setdescription,
     setPassword, // ✅ Exported
     setroomId,
-    setisjoiningroom,
+    setisjoinedroom,
     setIsCheckingAuth,
     setOnlineUsers,
     setSocket,

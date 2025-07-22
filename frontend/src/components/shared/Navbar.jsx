@@ -1,12 +1,10 @@
-import React from 'react';
 import { Search, Globe, Bookmark, Plus } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 function Navbar() {
   const { authUser } = useSelector((store) => store.auth);
-  const {isjoiningroom}=useSelector((store) => store.room);
-  const dispatch = useDispatch();
+  const {isjoinedroom}=useSelector((store) => store.room);
   const navigate = useNavigate();
 
   return (
@@ -41,7 +39,7 @@ function Navbar() {
       <div className="flex items-center gap-6">
 {authUser ? (
   <>
-    {!isjoiningroom && (
+    {!isjoinedroom && (
       <>
         <button
           onClick={() => navigate("/join-room")}
@@ -55,9 +53,9 @@ function Navbar() {
         >
           <Plus /> Create Room
         </button>
-        <Globe className="w-5 h-5 text-black cursor-pointer" />
       </>
     )}
+    <Globe className="w-5 h-5 text-black cursor-pointer" />
     <img
       src={authUser.profilePic || "/image.png"}
       alt="profile"

@@ -1,7 +1,7 @@
     import { Plus } from "lucide-react";
     import { useNavigate } from "react-router-dom";
     import { useDispatch, useSelector } from "react-redux";
-    import { setdescription, setroomName, setPassword } from "./components/store/roomSlice.js";
+    import { setdescription, setroomName, setPassword, setisjoinedroom } from "./components/store/roomSlice.js";
     import {axiosInstance} from "./components/utils/axios.js";
     import toast from "react-hot-toast";
 
@@ -25,6 +25,7 @@
         }
 
         toast.success("Room created successfully!");
+        dispatch(setisjoinedroom(true));
         navigate(`/room/${roomName.trim()}`);
         } catch (err) {
         const message = err.response?.data?.message || "Error creating room.";
