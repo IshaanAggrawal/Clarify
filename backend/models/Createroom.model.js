@@ -26,10 +26,16 @@
         ref: 'User',
         required: true,
         },
+        participants: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+        },
+        ],
     },
     {
         timestamps: true,
     }
     );
 
-    module.exports=mongoose.model('Room', roomSchema);
+    module.exports = mongoose.model('Room', roomSchema);
